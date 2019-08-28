@@ -58,18 +58,18 @@ struct Color_Template {
 };
 
 
-// Tabelle: Mittelwerte zur Smartieerkennung. Diese Werte wurden gemessen.
+// Tabelle: Mittelwerte zur Smartieerkennung. Diese Werte wurden gemessen. ( Previously know as GWxxx[] )
 //    FARBE          R%     G%     B%     Helligkeit-absolut
 struct Color averages[9]          =  {
-  { 33.8 , 38.8 , 27.5 ,  201.0  },
-  { 30.8 , 30.5 , 38.9 ,  193.0  },
-  { 16.1 , 34.2 , 50.5 ,  135.0  }, 
-  { 21.5 , 47.6 , 31.0 ,  1247.0 }, 
-  { 30.0 , 44.0 , 26.5 ,  1300.0 }, 
-  { 16.8 , 47.1 , 36.1 ,  1671.0 }, 
-  { 17.8 , 42.1 , 40.1 ,  1343.0 }, 
-  { 23.0 , 39.5 , 37.5 ,  1630.0 }, 
-  { 17.8 , 35.8 , 46.7 ,  172.0  }
+  {   33.8 ,  38.8 ,  27.5 ,    201.0,    Blue      },
+  {   30.8 ,  30.5 ,  38.9 ,    193.0,    Green     },
+  {   16.1 ,  34.2 ,  50.5 ,    135.0,    Yellow    }, 
+  {   21.5 ,  47.6 ,  31.0 ,    1247.0,   Rosa      }, 
+  {   30.0 ,  44.0 ,  26.5 ,    1300.0,   Purple    }, 
+  {   16.8 ,  47.1 ,  36.1 ,    1671.0,   Red       }, 
+  {   17.8 ,  42.1 ,  40.1 ,    1343.0,   Orange    }, 
+  {   23.0 ,  39.5 ,  37.5 ,    1630.0,   Brown     }, 
+  {   17.8 ,  35.8 ,  46.7 ,    172.0,    Empty     }
 };
 
 // Tabelle: Grenzwerte zur Smartieerkennung. Diese Werte werden in loops() abhängig von der Toleranz errechnet
@@ -100,11 +100,20 @@ void setup() {
   Serial.begin(115200);
   #endif
 
-  for ( size_t i = 1; i < 21; i++ ) {
+  /* 
+   *  Calibrate brigthness ( classification is useless now )
+   */
+  double brightness_calibration = 0;
+  for ( size_t i = 1; i <= 20; i++ ) {
     struct Color c = color();
-    
+    brightness_calibration += c.brightness;
   }
-  
+  brightness_calibration = brightness_calibration / 20;
+  double differences = brightness_calibration - averages[8].brightness;
+  for ( size_t i = 0; i < 9; i++ ) {
+    averages[i].brightness + differences;
+  }
+   
 }
 void loop() {
   for( size_t i = 0; i < 9; i++ ) {
