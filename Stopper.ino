@@ -12,6 +12,21 @@
 float Tolerance             = 0.10;  // Für RGB%. Zu Beginn sind 10% Sollwertabweichung erlaubt
 float Tolerance_Brightness  = 0.15;
 
+/*
+ * All Smartie Colors
+ */
+enum Colors {
+  Brown     = 0,
+  Green     = 1,
+  Yellow    = 2,
+  Rosa      = 3,
+  Purple    = 4,
+  Red       = 5,
+  Blue      = 6,
+  Orange    = 7,
+  Empty     = 8
+};
+
 
 /*
 Definition of a color in rgb% values
@@ -21,6 +36,7 @@ struct Color {
   double green;
   double blue;
   double brightness;
+  enum Colors classification;
 };
 
 /*
@@ -37,23 +53,10 @@ struct Color_Template {
   
   float blue_upper;
   float blue_lower;
-  
+
+  enum Colors classification;
 };
 
-/*
- * All Smartie Colors
- */
-enum Colors {
-  Brown,
-  Green,
-  Yellow,
-  Rosa,
-  Purple,
-  Red,
-  Blue,
-  Orange,
-  Empty
-};
 
 // Tabelle: Mittelwerte zur Smartieerkennung. Diese Werte wurden gemessen.
 //    FARBE          R%     G%     B%     Helligkeit-absolut
@@ -71,7 +74,17 @@ struct Color averages[9]          =  {
 
 // Tabelle: Grenzwerte zur Smartieerkennung. Diese Werte werden in loops() abhängig von der Toleranz errechnet
 // Aufbau: TW_xxx[1]=unterer Grenzwert ROT, [2]= oberer Grenzwert ROT, ...
-struct Color_Template colors[9]; // blue, green, yellow, rosa, purple, red, orange, brown, empty
+struct Color_Template colors[9] = {
+  {   0,  0,   0,  0,   0,  0,  Brown    },
+  {   0,  0,   0,  0,   0,  0,  Green    },
+  {   0,  0,   0,  0,   0,  0,  Yellow   },
+  {   0,  0,   0,  0,   0,  0,  Rosa     },
+  {   0,  0,   0,  0,   0,  0,  Purple   },
+  {   0,  0,   0,  0,   0,  0,  Red      },
+  {   0,  0,   0,  0,   0,  0,  Blue     },
+  {   0,  0,   0,  0,   0,  0,  Orange   },
+  {   0,  0,   0,  0,   0,  0,  Empty    }
+};
 
 
 void setup() {
@@ -79,6 +92,18 @@ void setup() {
   pinMode( s1, OUTPUT );
   pinMode( s2, OUTPUT );
   pinMode( s3, OUTPUT );
+  pinMode( out, INPUT );
+  digitalWrite( s0, HIGH );
+  digitalWrite( s1, LOW );
+
+  #ifdef REPORT
+  Serial.begin(115200);
+  #endif
+
+  for ( size_t i = 1; i < 21; i++ ) {
+    struct Color c = color();
+    
+  }
   
 }
 void loop() {
@@ -96,7 +121,7 @@ void loop() {
 
 // Hier werden die Werte vom Farbsensor ausgelesen und unter den
 // entsprechenden Variablen gespeichert
-enum Colors color() {
+struct Color color() {
   float red, green, blue;
   // Sensor für Rot-Messung einstellen
   digitalWrite(s2, LOW);
@@ -127,5 +152,24 @@ enum Colors color() {
   green    = green / brightness * 100;
   blue     = blue / brightness * 100;
 
-  
+  struct Color color;
+
+  for ( size_t i = 0; i < 9; i++ ) {
+    if(   colors[i].red_upper     > red 
+      &&  colors[i].red_lower     < red
+      &&  colors[i].green_upper   > green
+      &&  colors[i].green_lower   < green
+      &&  colors[i].blue_upper    > blue
+      &&  colors[i].blue_lower    < blue
+      ) {
+        color.classification  = colors[i].classification;
+        color.red             = red;
+        color.green           = green;
+        color.blue            = blue;
+      }
+  }
+  if ( ! color.classification ) {
+    color.classification = Empty;
+  }
+  return color;
 } 
