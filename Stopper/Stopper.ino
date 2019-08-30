@@ -78,15 +78,15 @@ struct Color averages[9]          =  {
 // Tabelle: Grenzwerte zur Smartieerkennung. Diese Werte werden in loops() abhängig von der Toleranz errechnet
 // Aufbau: TW_xxx[1]=unterer Grenzwert ROT, [2]= oberer Grenzwert ROT, ...
 struct Color_Template colors[9] = {
-  {   0,  0,   0,  0,   0,  0,  Brown    },
-  {   0,  0,   0,  0,   0,  0,  Green    },
-  {   0,  0,   0,  0,   0,  0,  Yellow   },
-  {   0,  0,   0,  0,   0,  0,  Rosa     },
-  {   0,  0,   0,  0,   0,  0,  Purple   },
-  {   0,  0,   0,  0,   0,  0,  Red      },
-  {   0,  0,   0,  0,   0,  0,  Blue     },
-  {   0,  0,   0,  0,   0,  0,  Orange   },
-  {   0,  0,   0,  0,   0,  0,  Empty    }
+  {   0,  0,   0,  0,   0,  0,  Blue      },
+  {   0,  0,   0,  0,   0,  0,  Green     },
+  {   0,  0,   0,  0,   0,  0,  Yellow    },
+  {   0,  0,   0,  0,   0,  0,  Rosa      },
+  {   0,  0,   0,  0,   0,  0,  Purple    },
+  {   0,  0,   0,  0,   0,  0,  Red       },
+  {   0,  0,   0,  0,   0,  0,  Brown     },
+  {   0,  0,   0,  0,   0,  0,  Orange    },
+  {   0,  0,   0,  0,   0,  0,  Empty     }
 };
 
 
@@ -130,9 +130,49 @@ void loop() {
 
     colors[i].blue_upper  = averages[i].blue * ( 1.0 + Tolerance );
     colors[i].blue_lower  = averages[i].blue * ( 1.0 - Tolerance );
+
   } 
 
   struct Color current_color = color();
+
+  
+  #ifdef REPORT
+  auto color_name = "";
+  Serial.println("Detect Color:");
+  switch( current_color.classification ) {
+    case Blue:
+      color_name = "Blue";
+      break;
+    case Green:
+      color_name = "Green";
+      break;
+    case Yellow: 
+      color_name = "Yellow";
+      break;
+    case Rosa: 
+      color_name = "Rosa";
+      break;
+    case Purple: 
+      color_name = "Purple";
+      break;
+    case Red:
+      color_name = "Red";
+      break;
+    case Orange:
+      color_name = "Orange";
+      break;
+    case Brown: 
+      color_name = "Brown";
+      break;
+    case Empty:
+      break;
+    default:
+      color_name = "Nothing";
+      break;
+  }
+  Serial.println(color_name);
+  #endif
+
   
   switch( current_color.classification ) {
     case Empty:
@@ -140,7 +180,7 @@ void loop() {
     default:
       irsend.sendSony( current_color.classification, IR);
   }
-  delay(500);
+  delay(5000);
 }
 
 
