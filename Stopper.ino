@@ -16,15 +16,15 @@ float Tolerance_Brightness  = 0.15;
  * All Smartie Colors
  */
 enum Colors {
-  Brown     = 0,
-  Green     = 1,
-  Yellow    = 2,
-  Rosa      = 3,
-  Purple    = 4,
-  Red       = 5,
-  Blue      = 6,
-  Orange    = 7,
-  Empty     = 8
+  Brown     = 10963136449, // IR Codes
+  Green     = 10962089471,
+  Yellow    = 10959576503,
+  Rosa      = 10958110861,
+  Purple    = 10956435773,
+  Red       = 10954132723,
+  Blue      = 1950573721,
+  Orange    = 1094109019,
+  Empty     = 0 // Empty shouldn't be signaled 
 };
 
 
