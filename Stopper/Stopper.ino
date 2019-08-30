@@ -12,8 +12,8 @@
 
 IRsend irsend;
 
-float Tolerance             = 0.10;  // Für RGB%. Zu Beginn sind 10% Sollwertabweichung erlaubt
-float Tolerance_Brightness  = 0.15;
+float Tolerance             = 0.20;  // Für RGB%. Zu Beginn sind 10% Sollwertabweichung erlaubt
+float Tolerance_Brightness  = 0.25;
 
 /*
  * All Smartie Colors - if you change this you have to change this in the SmartSwitch.ino
@@ -101,6 +101,7 @@ void setup() {
 
   #ifdef REPORT
   Serial.begin(115200);
+  Serial.println("[");
   #endif
 
   /* 
@@ -138,7 +139,7 @@ void loop() {
   
   #ifdef REPORT
   auto color_name = "";
-  Serial.println("Detect Color:");
+
   switch( current_color.classification ) {
     case Blue:
       color_name = "Blue";
@@ -170,7 +171,16 @@ void loop() {
       color_name = "Nothing";
       break;
   }
-  Serial.println(color_name);
+  Serial.println( color_name );
+  Serial.println ( "[" );
+  Serial.print ( current_color.red, DEC );
+  Serial.print ( ",\t" );
+  Serial.print ( current_color.green, DEC );
+  Serial.print ( ",\t" );
+  Serial.print ( current_color.blue, DEC );
+  Serial.print ( ",\t" );
+  Serial.print ( current_color.brightness, DEC );
+  Serial.println ( "\n]," );
   #endif
 
   
