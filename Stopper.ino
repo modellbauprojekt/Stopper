@@ -1,13 +1,16 @@
-#include <Wire.h>
+#include <IRremote.h>
 
 #define REPORT    1 // Report to Serial
 
 //Verbindung der Farbsensorkontakte mit dem Arduino festlegen
-#define s1        9
 #define s0        8
-#define s2        12
-#define s3        11
+#define s1        9
 #define out       10
+#define s3        11
+#define s2        12
+#define IR        13
+
+IRsend irsend;
 
 float Tolerance             = 0.10;  // Für RGB%. Zu Beginn sind 10% Sollwertabweichung erlaubt
 float Tolerance_Brightness  = 0.15;
@@ -113,6 +116,7 @@ void setup() {
   for ( size_t i = 0; i < 9; i++ ) {
     averages[i].brightness + differences;
   }
+
    
 }
 
@@ -131,22 +135,20 @@ void loop() {
   struct Color current_color = color();
   
   switch( current_color.classification ) {
-    case Blue:
-    case Green:
-    case Yellow:
-    case Rosa:
-    case Purple:
-    case Red:
-    case Orange:
-    case Brown:
     case Empty:
+      break;
     default:
-      delay( 5000 );
+      irsend.sendSony( current_color.classification, IR);
   }
+  delay(500);
 }
 
-// Hier werden die Werte vom Farbsensor ausgelesen und unter den
-// entsprechenden Variablen gespeichert
+
+
+
+/*
+ * Return the Color + Classification
+ */
 struct Color color() {
   float red, green, blue;
   // Sensor für Rot-Messung einstellen
