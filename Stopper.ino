@@ -115,6 +115,7 @@ void setup() {
   }
    
 }
+
 void loop() {
   for( size_t i = 0; i < 9; i++ ) {
     colors[i].red_upper   = averages[i].red * ( 1.0 + Tolerance );
@@ -125,7 +126,12 @@ void loop() {
 
     colors[i].blue_upper  = averages[i].blue * ( 1.0 + Tolerance );
     colors[i].blue_lower  = averages[i].blue * ( 1.0 - Tolerance );
-  }  
+  } 
+
+  struct Color current_color = color();
+  if (current_color.classification == Empty ) {
+    delay (5000); // Wait a little while
+  }
 }
 
 // Hier werden die Werte vom Farbsensor ausgelesen und unter den
