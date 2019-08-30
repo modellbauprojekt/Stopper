@@ -129,8 +129,19 @@ void loop() {
   } 
 
   struct Color current_color = color();
-  if (current_color.classification == Empty ) {
-    delay (5000); // Wait a little while
+  
+  switch( current_color.classification ) {
+    case Blue:
+    case Green:
+    case Yellow:
+    case Rosa:
+    case Purple:
+    case Red:
+    case Orange:
+    case Brown:
+    case Empty:
+    default:
+      delay( 5000 );
   }
 }
 
