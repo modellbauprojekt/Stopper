@@ -16,7 +16,7 @@ float Tolerance             = 0.10;  // Für RGB%. Zu Beginn sind 10% Sollwertab
 float Tolerance_Brightness  = 0.15;
 
 /*
- * All Smartie Colors
+ * All Smartie Colors - if you change this you have to change this in the SmartSwitch.ino
  */
 enum Colors {
   Brown     = 63136449, // IR Codes (8 decimal chars)
